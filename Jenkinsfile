@@ -5,7 +5,7 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/sesa846601/devops-dashboard.git'
+                git branch 'main' url 'https://github.com/sesa846601/devops-dashboard.git'
             }
         }
 

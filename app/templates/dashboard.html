@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DevOps Dashboard</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #111;
+            color: white;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .card {
+            background: #1f1f1f;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            margin: auto;
+        }
+
+        h1 {
+            color: #00ffcc;
+        }
+
+        p {
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>DevOps Dashboard</h1>
+
+<p>Application Version: {{ version }}</p>
+
+<p>Deployment Time: {{ deployment_time }}</p>
+
+<p>Status: Running</p>
+
+</div>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
-from flask import Flask
-import os
+from flask import Flask, render_template
+import datetime
 
 app = Flask(__name__)
 
@@ -11,9 +11,15 @@ def get_version():
         return "unknown"
 
 @app.route("/")
-def home():
+def dashboard():
     version = get_version()
-    return f"DevOps CI/CD Demo - Version {version}"
+    deployment_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    return render_template(
+        "dashboard.html",
+        version=version,
+        deployment_time=deployment_time
+    )
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

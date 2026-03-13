@@ -22,7 +22,7 @@ pipeline {
             }
         }
 
-        stage('Deploy Container') {
+        stage('Run New Container') {
             steps {
                 sh 'docker run -d -p 5000:5000 --name devops-dashboard devops-dashboard'
             }

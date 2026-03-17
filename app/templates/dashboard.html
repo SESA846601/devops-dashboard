@@ -1,588 +1,199 @@
-<!-- testing -->
-<!-- another testing -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="{{ 'failed' if build_info.status == 'failed' else 'success' }}">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="refresh" content="10">
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="refresh" content="30"/>
     <title>DevOps Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Orbitron:wght@600;900&display=swap" rel="stylesheet"/>
+
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+
     <style>
         :root {
-            --bg: #070b10;
-            --surface: #0d1117;
-            --surface2: #161b22;
-            --border: #21262d;
-            --green: #00ff88;
-            --green-dim: rgba(0,255,136,0.15);
-            --green-glow: rgba(0,255,136,0.35);
-            --blue: #58a6ff;
-            --orange: #f0883e;
-            --text: #c9d1d9;
-            --muted: #484f58;
-            --font-mono: 'JetBrains Mono', monospace;
-            --font-display: 'Orbitron', sans-serif;
+            --bg:#060a0f;
+            --surface:#0b1017;
+            --surface2:#111920;
+            --border:#1c2a35;
+            --accent:#00e5ff;
+            --accent-glow:rgba(0,229,255,0.3);
+            --accent-dim:rgba(0,229,255,0.08);
+            --green:#00ff88;
+            --muted:#3d5060;
+            --text:#b0c4cf;
+            --font-ui:'Share Tech Mono', monospace;
+            --font-display:'Orbitron', sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html.failed {
+            --accent:#ff3b3b;
+            --accent-glow:rgba(255,59,59,0.35);
+            --accent-dim:rgba(255,59,59,0.08);
+            --bg:#0f0608;
+            --surface:#160b0c;
+            --surface2:#1d1010;
+            --border:#2e1616;
+        }
 
         body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: var(--font-mono);
-            min-height: 100vh;
-            padding: 32px 24px 48px;
-            background-image:
-                radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,255,136,0.05) 0%, transparent 60%),
-                repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px),
-                repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 40px);
+            font-family:var(--font-ui);
+            background:var(--bg);
+            color:var(--text);
+            padding:40px 20px;
         }
 
-        /* ─── HEADER ─── */
-        .header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
+        .wrap { max-width:900px; margin:auto; }
 
-        .header-eyebrow {
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            letter-spacing: 4px;
-            color: var(--muted);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
+        .header { text-align:center; margin-bottom:40px; }
 
         .header h1 {
-            font-family: var(--font-display);
-            font-size: clamp(1.6rem, 4vw, 2.6rem);
-            font-weight: 900;
-            color: var(--green);
-            text-shadow: 0 0 30px var(--green-glow), 0 0 60px rgba(0,255,136,0.1);
-            letter-spacing: 3px;
+            font-family:var(--font-display);
+            color:var(--accent);
+            letter-spacing:3px;
         }
 
-        .header-sub {
-            font-size: 0.72rem;
-            color: var(--muted);
-            margin-top: 8px;
-            letter-spacing: 2px;
+        .badge {
+            margin-top:10px;
+            display:inline-block;
+            border:1px solid var(--accent);
+            padding:5px 12px;
+            color:var(--accent);
         }
 
-        .live-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 16px;
-            background: var(--green-dim);
-            border: 1px solid rgba(0,255,136,0.3);
-            padding: 5px 14px;
-            border-radius: 4px;
-            font-size: 0.68rem;
-            color: var(--green);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .pulse {
-            width: 7px;
-            height: 7px;
-            background: var(--green);
-            border-radius: 50%;
-            animation: pulseAnim 2s ease-in-out infinite;
-        }
-
-        @keyframes pulseAnim {
-            0%, 100% { box-shadow: 0 0 0 0 var(--green-glow); opacity: 1; }
-            50% { box-shadow: 0 0 0 8px transparent; opacity: 0.7; }
-        }
-
-        /* ─── SECTION LABEL ─── */
-        .section-label {
-            font-size: 0.62rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-label::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        /* ─── PIPELINE VISUALIZER ─── */
-        .pipeline-wrap {
-            max-width: 860px;
-            margin: 0 auto 40px;
-        }
-
-        .pipeline-track {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 28px 32px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pipeline-track::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--green), transparent);
-            animation: scanLine 3s ease-in-out infinite;
-        }
-
-        @keyframes scanLine {
-            0% { opacity: 0; transform: translateX(-100%); }
-            50% { opacity: 1; }
-            100% { opacity: 0; transform: translateX(100%); }
+        .pipeline-box {
+            background:var(--surface);
+            padding:25px;
+            border-radius:8px;
         }
 
         .stages-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
         }
 
-        .stage-node {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            flex: 0 0 auto;
-            animation: fadeInUp 0.6s ease both;
+        .stage {
+            text-align:center;
         }
 
-        .stage-node:nth-child(1) { animation-delay: 0.1s; }
-        .stage-node:nth-child(3) { animation-delay: 0.2s; }
-        .stage-node:nth-child(5) { animation-delay: 0.3s; }
-        .stage-node:nth-child(7) { animation-delay: 0.4s; }
-        .stage-node:nth-child(9) { animation-delay: 0.5s; }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        .stage-ring {
+            width:55px;
+            height:55px;
+            border-radius:50%;
+            border:2px solid var(--accent);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            margin-bottom:6px;
         }
 
-        .stage-circle {
-            width: 58px;
-            height: 58px;
-            border-radius: 50%;
-            background: var(--surface2);
-            border: 2px solid var(--green);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            position: relative;
-            box-shadow: 0 0 12px var(--green-dim), inset 0 0 12px var(--green-dim);
-            transition: box-shadow 0.3s;
-        }
+        .passed { border-color:var(--green); }
+        .stage-failed { border-color:#ff3b3b; }
+        .skipped { opacity:0.3; }
+        .running { box-shadow:0 0 15px var(--accent-glow); }
 
-        .stage-circle:hover {
-            box-shadow: 0 0 24px var(--green-glow), inset 0 0 16px var(--green-dim);
-        }
-
-        .checkmark {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            width: 20px;
-            height: 20px;
-            background: var(--green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            color: #000;
-            font-weight: 900;
-            border: 2px solid var(--bg);
-        }
-
-        .stage-name {
-            font-size: 0.65rem;
-            color: var(--text);
-            letter-spacing: 1px;
-            text-align: center;
-        }
-
-        .stage-status {
-            font-size: 0.58rem;
-            color: var(--green);
-            letter-spacing: 1px;
-        }
-
-        /* connector line */
         .connector {
-            flex: 1;
-            height: 2px;
-            background: linear-gradient(90deg, var(--green) 0%, rgba(0,255,136,0.4) 100%);
-            margin-bottom: 38px;
-            position: relative;
+            flex:1;
+            height:2px;
+            background:var(--green);
         }
 
-        .connector::after {
-            content: '';
-            position: absolute;
-            right: -1px;
-            top: -4px;
-            width: 0;
-            height: 0;
-            border-left: 7px solid rgba(0,255,136,0.4);
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
+        .connector.dim {
+            background:var(--border);
         }
 
-        /* ─── INFO CARDS ─── */
-        .cards-wrap {
-            max-width: 860px;
-            margin: 0 auto 36px;
+        .card {
+            margin-top:20px;
+            padding:15px;
+            background:var(--surface);
         }
 
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        @media (max-width: 640px) {
-            .cards-grid { grid-template-columns: 1fr 1fr; }
-        }
-
-        .info-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 18px 20px;
-            transition: border-color 0.25s, transform 0.25s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .info-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 3px;
-            height: 100%;
-            background: var(--green);
-            opacity: 0.6;
-        }
-
-        .info-card:hover {
-            border-color: rgba(0,255,136,0.3);
-            transform: translateY(-2px);
-        }
-
-        .card-label {
-            font-size: 0.6rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--muted);
-            margin-bottom: 10px;
-        }
-
-        .card-val {
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--green);
-            line-height: 1;
-            word-break: break-all;
-        }
-
-        .card-val.sm { font-size: 0.88rem; color: var(--text); }
-
-        .card-tag {
-            display: inline-block;
-            margin-top: 6px;
-            font-size: 0.58rem;
-            letter-spacing: 1px;
-            color: var(--muted);
-        }
-
-        /* ─── DEPLOYMENT LOG ─── */
-        .log-wrap {
-            max-width: 860px;
-            margin: 0 auto;
-        }
-
-        .log-terminal {
-            background: #010409;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .term-header {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .term-dots { display: flex; gap: 6px; }
-        .dot { width: 11px; height: 11px; border-radius: 50%; }
-        .dot.red { background: #f85149; }
-        .dot.yellow { background: #e3b341; }
-        .dot.green-dot { background: #3fb950; }
-
-        .term-title {
-            font-size: 0.65rem;
-            color: var(--muted);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-left: 4px;
-        }
-
-        .term-body {
-            padding: 20px 22px;
-            font-size: 0.78rem;
-            line-height: 2;
-        }
-
-        .log-entry { display: flex; gap: 12px; align-items: baseline; }
-
-        .ts {
-            color: var(--muted);
-            white-space: nowrap;
-            font-size: 0.7rem;
-        }
-
-        .log-info { color: var(--blue); }
-        .log-success { color: var(--green); }
-        .log-step { color: #8b949e; }
-        .log-highlight { color: var(--orange); }
-        .log-done { color: var(--green); font-weight: 700; }
-
-        /* ─── FOOTER ─── */
-        .footer {
-            text-align: center;
-            margin-top: 36px;
-            font-size: 0.62rem;
-            color: var(--muted);
-            letter-spacing: 1.5px;
-        }
-
-        .footer span {
-            color: rgba(0,255,136,0.4);
-            margin: 0 6px;
-        }
     </style>
 </head>
+
 <body>
+<div class="wrap">
 
-<!-- HEADER -->
-<div class="header">
-    <div class="header-eyebrow">CI/CD Pipeline Monitor</div>
-    <h1>DevOps Dashboard</h1>
-    <div class="header-sub">Jenkins &nbsp;·&nbsp; Docker &nbsp;·&nbsp; GitHub</div>
-    <div>
-        <span class="live-badge">
-            <span class="pulse"></span>
-            Container Live · Port 5000
-        </span>
+    <!-- HEADER -->
+    <div class="header">
+        <h1>DevOps Dashboard</h1>
+
+        <div class="badge">
+            {% if build_info.status == 'failed' %}
+                Build #{{ build_info.build_number }} FAILED
+            {% else %}
+                Container Live · Port 5000
+            {% endif %}
+        </div>
     </div>
-</div>
 
-<!-- PIPELINE VISUALIZER -->
-<div class="pipeline-wrap">
-    <div class="section-label">Pipeline Stages</div>
-    <div class="pipeline-track">
+    <!-- PIPELINE -->
+    <div class="pipeline-box">
         <div class="stages-row">
 
-            <div class="stage-node">
-                <div class="stage-circle">
-                    📥
-                    <div class="checkmark">✓</div>
-                </div>
-                <div class="stage-name">Clone</div>
-                <div class="stage-status">PASSED</div>
+        {% set icons = {
+            'Clone':'📥',
+            'Test':'🧪',
+            'Build Info':'📋',
+            'Build':'🐳',
+            'Deploy':'🚀',
+            'Live':'✅'
+        } %}
+
+        {% for stage in pipeline %}
+
+            <div class="stage">
+
+                {% if stage.state == 'failed' %}
+                    <div class="stage-ring stage-failed">
+                        {{ icons[stage.name] }}
+                    </div>
+                    <div>{{ stage.name }}</div>
+                    <div style="color:red;">Failed</div>
+
+                {% elif stage.state == 'skipped' %}
+                    <div class="stage-ring skipped">
+                        {{ icons[stage.name] }}
+                    </div>
+                    <div>{{ stage.name }}</div>
+                    <div>Skipped</div>
+
+                {% elif stage.state == 'running' %}
+                    <div class="stage-ring running">
+                        {{ icons[stage.name] }}
+                    </div>
+                    <div>{{ stage.name }}</div>
+                    <div>Running</div>
+
+                {% else %}
+                    <div class="stage-ring passed">
+                        {{ icons[stage.name] }}
+                    </div>
+                    <div>{{ stage.name }}</div>
+                    <div style="color:lime;">Passed</div>
+                {% endif %}
+
             </div>
 
-            <div class="connector"></div>
+            {% if not loop.last %}
+                {% if stage.state in ['failed','skipped'] %}
+                    <div class="connector dim"></div>
+                {% else %}
+                    <div class="connector"></div>
+                {% endif %}
+            {% endif %}
 
-            <div class="stage-node">
-                <div class="stage-circle">
-                    🧪
-                    <div class="checkmark">✓</div>
-                </div>
-                <div class="stage-name">Test</div>
-                <div class="stage-status">PASSED</div>
-            </div>
-
-            <div class="connector"></div>
-
-            <div class="stage-node">
-                <div class="stage-circle">
-                    🐳
-                    <div class="checkmark">✓</div>
-                </div>
-                <div class="stage-name">Build</div>
-                <div class="stage-status">PASSED</div>
-            </div>
-
-            <div class="connector"></div>
-
-            <div class="stage-node">
-                <div class="stage-circle">
-                    🚀
-                    <div class="checkmark">✓</div>
-                </div>
-                <div class="stage-name">Deploy</div>
-                <div class="stage-status">PASSED</div>
-            </div>
-
-            <div class="connector"></div>
-
-            <div class="stage-node">
-                <div class="stage-circle" style="border-color: var(--green); box-shadow: 0 0 20px var(--green-glow);">
-                    ✅
-                </div>
-                <div class="stage-name">Live</div>
-                <div class="stage-status">RUNNING</div>
-            </div>
+        {% endfor %}
 
         </div>
     </div>
-</div>
 
-<!-- INFO CARDS -->
-<div class="cards-wrap">
-    <div class="section-label">Build Information</div>
-    <div class="cards-grid">
-
-        <div class="info-card">
-            <div class="card-label">Build Number</div>
-            <div class="card-val">#{{ build_info.build_number }}</div>
-            <div class="card-tag">Jenkins Build ID</div>
-        </div>
-
-        <div class="info-card">
-            <div class="card-label">App Version</div>
-            <div class="card-val">v{{ version }}</div>
-            <div class="card-tag">version.txt</div>
-        </div>
-
-        <div class="info-card">
-            <div class="card-label">Git Commit</div>
-            <div class="card-val sm">{{ build_info.git_commit }}</div>
-            <div class="card-tag">SHA (short)</div>
-        </div>
-
-        <div class="info-card">
-            <div class="card-label">Branch</div>
-            <div class="card-val sm">{{ build_info.git_branch }}</div>
-            <div class="card-tag">Git Branch</div>
-        </div>
-
-        <div class="info-card">
-            <div class="card-label">Built At</div>
-            <div class="card-val sm">{{ build_info.build_time }}</div>
-            <div class="card-tag">Jenkins Build Time</div>
-        </div>
-
-        <div class="info-card">
-            <div class="card-label">Page Loaded</div>
-            <div class="card-val sm">{{ uptime }}</div>
-            <div class="card-tag">Server Time</div>
-        </div>
-
+    <!-- INFO -->
+    <div class="card">
+        Build #{{ build_info.build_number }} |
+        {{ build_info.git_commit }} |
+        {{ build_info.git_branch }}
     </div>
-</div>
 
-<!-- DEPLOYMENT LOG TERMINAL -->
-<div class="log-wrap">
-    <div class="section-label">Deployment Log</div>
-    <div class="log-terminal">
-        <div class="term-header">
-            <div class="term-dots">
-                <div class="dot red"></div>
-                <div class="dot yellow"></div>
-                <div class="dot green-dot"></div>
-            </div>
-            <div class="term-title">jenkins-pipeline · build #{{ build_info.build_number }}</div>
-        </div>
-        <div class="term-body">
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-info">INFO &nbsp; GitHub webhook triggered — push event detected on {{ build_info.git_branch }}</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-step">START  Stage: Clone Repository</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-success">PASS &nbsp; Cloned commit <strong>{{ build_info.git_commit }}</strong> from branch {{ build_info.git_branch }}</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-step">START  Stage: Run Tests</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-success">PASS &nbsp; pytest — all tests passed</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-step">START  Stage: Build Docker Image</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-highlight">BUILD  docker build -t devops-dashboard:{{ build_info.build_number }} .</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-success">PASS &nbsp; Image built successfully — devops-dashboard:{{ build_info.build_number }}</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-step">START  Stage: Stop Old Container</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-success">PASS &nbsp; Previous container stopped and removed</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-step">START  Stage: Run New Container</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-success">PASS &nbsp; Container started — docker run -d -p 5000:5000 devops-dashboard</span>
-            </div>
-            <div class="log-entry">
-                <span class="ts">[{{ build_info.build_time }}]</span>
-                <span class="log-done">✔ DEPLOYMENT #{{ build_info.build_number }} SUCCESSFUL &nbsp;|&nbsp; commit {{ build_info.git_commit }}</span>
-            </div>
-        </div>
-    </div>
 </div>
-
-<!-- FOOTER -->
-<div class="footer">
-    DevOps Dashboard
-    <span>·</span>
-    Build #{{ build_info.build_number }}
-    <span>·</span>
-    {{ build_info.git_commit }}
-    <span>·</span>
-    Jenkins + Docker + GitHub
-</div>
-
 </body>
 </html>

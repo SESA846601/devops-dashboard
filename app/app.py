@@ -85,8 +85,8 @@ def get_logs():
     try:
         with open("logs.txt", "r") as f:
             return f.readlines()
-    except:
-        return ["No logs available"]
+    except Exception as e:
+        return [f"Error loading logs: {str(e)}"]
 
 
 if __name__ == "__main__":

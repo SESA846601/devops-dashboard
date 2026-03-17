@@ -62,6 +62,7 @@ pytest app/tests/ -v > logs.txt 2>&1 || true
 
 echo "Logs saved"
 ls -l logs.txt
+
 '''
                         //now saving logs
                     } catch (e) {
@@ -79,6 +80,8 @@ ls -l logs.txt
             steps {
                 script {    // ← Scripted Pipeline block
                     try {
+
+                        sh 'cp logs.txt app/logs.txt || true'
                         def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                         def buildTime  = sh(script: 'date "+%Y-%m-%d %H:%M:%S"',  returnStdout: true).trim()
                         def branch     = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()

@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+
+  # Flask app metrics (requests, response time, counters)
+  - job_name: 'flask-app'
+    static_configs:
+      - targets: ['192.168.78.128:5000']
+    metrics_path: '/metrics'
+
+  # Jenkins build metrics (requires Prometheus plugin in Jenkins)
+  - job_name: 'jenkins'
+    static_configs:
+      - targets: ['192.168.78.128:8080']
+    metrics_path: '/prometheus'
+
+  # Docker container stats via cAdvisor (CPU, memory, network)
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']

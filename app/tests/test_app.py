@@ -30,5 +30,5 @@ def test_api_info_returns_json():
 
 
 ##for failing test demonstration
-# def test_fail_pipeline():
-#     assert False
+def test_fail_pipeline():
+    assert False

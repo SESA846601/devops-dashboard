@@ -1,199 +1,225 @@
 <!DOCTYPE html>
 <html lang="en" class="{{ 'failed' if build_info.status == 'failed' else 'success' }}">
+
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="refresh" content="30"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="refresh" content="30" />
     <title>DevOps Dashboard</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap"
+        rel="stylesheet" />
 
     <style>
         :root {
-            --bg:#060a0f;
-            --surface:#0b1017;
-            --surface2:#111920;
-            --border:#1c2a35;
-            --accent:#00e5ff;
-            --accent-glow:rgba(0,229,255,0.3);
-            --accent-dim:rgba(0,229,255,0.08);
-            --green:#00ff88;
-            --muted:#3d5060;
-            --text:#b0c4cf;
-            --font-ui:'Share Tech Mono', monospace;
-            --font-display:'Orbitron', sans-serif;
+            --bg: #060a0f;
+            --surface: #0b1017;
+            --surface2: #111920;
+            --border: #1c2a35;
+            --accent: #00e5ff;
+            --accent-glow: rgba(0, 229, 255, 0.3);
+            --accent-dim: rgba(0, 229, 255, 0.08);
+            --green: #00ff88;
+            --muted: #3d5060;
+            --text: #b0c4cf;
+            --font-ui: 'Share Tech Mono', monospace;
+            --font-display: 'Orbitron', sans-serif;
         }
 
         html.failed {
-            --accent:#ff3b3b;
-            --accent-glow:rgba(255,59,59,0.35);
-            --accent-dim:rgba(255,59,59,0.08);
-            --bg:#0f0608;
-            --surface:#160b0c;
-            --surface2:#1d1010;
-            --border:#2e1616;
+            --accent: #ff3b3b;
+            --accent-glow: rgba(255, 59, 59, 0.35);
+            --accent-dim: rgba(255, 59, 59, 0.08);
+            --bg: #0f0608;
+            --surface: #160b0c;
+            --surface2: #1d1010;
+            --border: #2e1616;
         }
 
         body {
-            font-family:var(--font-ui);
-            background:var(--bg);
-            color:var(--text);
-            padding:40px 20px;
+            font-family: var(--font-ui);
+            background: var(--bg);
+            color: var(--text);
+            padding: 40px 20px;
         }
 
-        .wrap { max-width:900px; margin:auto; }
+        .wrap {
+            max-width: 900px;
+            margin: auto;
+        }
 
-        .header { text-align:center; margin-bottom:40px; }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
 
         .header h1 {
-            font-family:var(--font-display);
-            color:var(--accent);
-            letter-spacing:3px;
+            font-family: var(--font-display);
+            color: var(--accent);
+            letter-spacing: 3px;
         }
 
         .badge {
-            margin-top:10px;
-            display:inline-block;
-            border:1px solid var(--accent);
-            padding:5px 12px;
-            color:var(--accent);
+            margin-top: 10px;
+            display: inline-block;
+            border: 1px solid var(--accent);
+            padding: 5px 12px;
+            color: var(--accent);
         }
 
         .pipeline-box {
-            background:var(--surface);
-            padding:25px;
-            border-radius:8px;
+            background: var(--surface);
+            padding: 25px;
+            border-radius: 8px;
         }
 
         .stages-row {
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .stage {
-            text-align:center;
+            text-align: center;
         }
 
         .stage-ring {
-            width:55px;
-            height:55px;
-            border-radius:50%;
-            border:2px solid var(--accent);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            margin-bottom:6px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
         }
 
-        .passed { border-color:var(--green); }
-        .stage-failed { border-color:#ff3b3b; }
-        .skipped { opacity:0.3; }
-        .running { box-shadow:0 0 15px var(--accent-glow); }
+        .passed {
+            border-color: var(--green);
+        }
+
+        .stage-failed {
+            border-color: #ff3b3b;
+        }
+
+        .skipped {
+            opacity: 0.3;
+        }
+
+        .running {
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
 
         .connector {
-            flex:1;
-            height:2px;
-            background:var(--green);
+            flex: 1;
+            height: 2px;
+            background: var(--green);
         }
 
         .connector.dim {
-            background:var(--border);
+            background: var(--border);
         }
 
         .card {
-            margin-top:20px;
-            padding:15px;
-            background:var(--surface);
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--surface);
         }
-
     </style>
 </head>
 
 <body>
-<div class="wrap">
+    <div class="wrap">
 
-    <!-- HEADER -->
-    <div class="header">
-        <h1>DevOps Dashboard</h1>
+        <!-- HEADER -->
+        <div class="header">
+            <h1>DevOps Dashboard</h1>
 
-        <div class="badge">
-            {% if build_info.status == 'failed' %}
+            <div class="badge">
+                {% if build_info.status == 'failed' %}
                 Build #{{ build_info.build_number }} FAILED
-            {% else %}
+                {% else %}
                 Container Live · Port 5000
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
-    </div>
 
-    <!-- PIPELINE -->
-    <div class="pipeline-box">
-        <div class="stages-row">
+        <!-- PIPELINE -->
+        <div class="pipeline-box">
+            <div class="stages-row">
 
-        {% set icons = {
-            'Clone':'📥',
-            'Test':'🧪',
-            'Build Info':'📋',
-            'Build':'🐳',
-            'Deploy':'🚀',
-            'Live':'✅'
-        } %}
+                {% set icons = {
+                'Clone':'📥',
+                'Test':'🧪',
+                'Build Info':'📋',
+                'Build':'🐳',
+                'Deploy':'🚀',
+                'Live':'✅'
+                } %}
 
-        {% for stage in pipeline %}
+                {% for stage in pipeline %}
 
-            <div class="stage">
+                <div class="stage">
 
-                {% if stage.state == 'failed' %}
+                    {% if stage.state == 'failed' %}
                     <div class="stage-ring stage-failed">
                         {{ icons[stage.name] }}
                     </div>
                     <div>{{ stage.name }}</div>
                     <div style="color:red;">Failed</div>
 
-                {% elif stage.state == 'skipped' %}
+                    {% elif stage.state == 'skipped' %}
                     <div class="stage-ring skipped">
                         {{ icons[stage.name] }}
                     </div>
                     <div>{{ stage.name }}</div>
                     <div>Skipped</div>
 
-                {% elif stage.state == 'running' %}
+                    {% elif stage.state == 'running' %}
                     <div class="stage-ring running">
                         {{ icons[stage.name] }}
                     </div>
                     <div>{{ stage.name }}</div>
                     <div>Running</div>
 
-                {% else %}
+                    {% else %}
                     <div class="stage-ring passed">
                         {{ icons[stage.name] }}
                     </div>
                     <div>{{ stage.name }}</div>
                     <div style="color:lime;">Passed</div>
+                    {% endif %}
+
+                </div>
+
+                {% if not loop.last %}
+                {% if stage.state in ['failed','skipped'] %}
+                <div class="connector dim"></div>
+                {% else %}
+                <div class="connector"></div>
                 {% endif %}
+                {% endif %}
+                <div style="margin-top:30px; background:#020609; padding:20px; border-radius:8px;">
+                    <h3 style="margin-bottom:10px;">Logs</h3>
+
+                    <div style="font-size:13px; line-height:1.6; max-height:300px; overflow-y:auto;">
+
+                        {% for line in logs %}
+                        <div>{{ line }}</div>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+                <!-- INFO -->
+                <div class="card">
+                    Build #{{ build_info.build_number }} |
+                    {{ build_info.git_commit }} |
+                    {{ build_info.git_branch }}
+                </div>
 
             </div>
-
-            {% if not loop.last %}
-                {% if stage.state in ['failed','skipped'] %}
-                    <div class="connector dim"></div>
-                {% else %}
-                    <div class="connector"></div>
-                {% endif %}
-            {% endif %}
-
-        {% endfor %}
-
-        </div>
-    </div>
-
-    <!-- INFO -->
-    <div class="card">
-        Build #{{ build_info.build_number }} |
-        {{ build_info.git_commit }} |
-        {{ build_info.git_branch }}
-    </div>
-
-</div>
 </body>
+
 </html>

@@ -39,8 +39,9 @@ def dashboard():
     build_info = get_build_info()
     version    = get_version()
     uptime     = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    logs     = get_logs()
     pipeline = get_pipeline_stages(build_info)
-    return render_template("dashboard.html", build_info=build_info, version=version, uptime=uptime, pipeline=pipeline)
+    return render_template("dashboard.html", build_info=build_info, version=version, uptime=uptime, pipeline=pipeline, logs=logs)
 
 
 @app.route("/health")
@@ -79,6 +80,13 @@ def get_pipeline_stages(build_info):
             pipeline.append({"name": stage, "state": "passed"})
 
     return pipeline
+
+def get_logs():
+    try:
+        with open("logs.txt", "r") as f:
+            return f.readlines()
+    except:
+        return ["No logs available"]
 
 
 if __name__ == "__main__":

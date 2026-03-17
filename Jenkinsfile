@@ -1,15 +1,3 @@
-/*
- * DevOps Dashboard — Full CI/CD Pipeline
- * ─────────────────────────────────────────────────────────────
- * Topics covered:
- *   ✅ Declarative Pipeline  — overall pipeline structure
- *   ✅ Scripted Pipeline     — script{} blocks for logic & failure tracking
- *   ✅ Secrets Management    — GitHub PAT via Jenkins credentials store
- *   ✅ Agent using Container — Test stage runs inside python:3.9-slim
- *   ✅ Agent using VM        — top-level agent labels our Linux VM node
- * ─────────────────────────────────────────────────────────────
- */
-
 def failedStageName = ''   // Scripted: tracks which stage failed
 
 // ── DECLARATIVE PIPELINE ──────────────────────────────────────
@@ -68,8 +56,9 @@ pipeline {
                     try {
                         sh '''
                             pip install flask pytest prometheus-flask-exporter --quiet
-                            pytest app/tests/ -v
+                            pytest app/tests/ -v logs.txt 2>&1
                         '''
+                        //now saving logs
                     } catch (e) {
                         failedStageName = 'Test'
                         throw e

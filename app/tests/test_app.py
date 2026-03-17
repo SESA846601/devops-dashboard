@@ -26,5 +26,9 @@ def test_api_info_returns_json():
     assert res.status_code == 200
     assert 'status' in res.get_json()
 
-def test_fail_pipeline():
-    assert False
+
+
+
+##for failing test demonstration
+# def test_fail_pipeline():
+#     assert False

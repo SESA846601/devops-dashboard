@@ -199,27 +199,33 @@
                 <div class="connector"></div>
                 {% endif %}
                 {% endif %}
-                <div style="margin-top:30px; background:#020609; padding:20px; border-radius:8px;">
-                    <h3 style="margin-bottom:10px;">Logs</h3>
 
-                    <div style="font-size:13px; line-height:1.6; max-height:300px; overflow-y:auto;">
-
-                        {% for line in logs %}
-                        <div>{{ line }}</div>
-
-                        {% endfor %}
-
-                    </div>
-                </div>
-
-                <!-- INFO -->
-                <div class="card">
-                    Build #{{ build_info.build_number }} |
-                    {{ build_info.git_commit }} |
-                    {{ build_info.git_branch }}
-                </div>
+                {% endfor %} <!-- 🔥 FIX: CLOSE LOOP HERE -->
 
             </div>
+        </div>
+
+
+        <!-- LOGS (OUTSIDE LOOP) -->
+        <div style="margin-top:30px; background:#020609; padding:20px; border-radius:8px;">
+            <h3 style="margin-bottom:10px;">Logs</h3>
+
+            <div style="font-size:13px; line-height:1.6; max-height:300px; overflow-y:auto;">
+                {% for line in logs %}
+                <div>{{ line }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+        <!-- INFO -->
+        <div class="card">
+            Build #{{ build_info.build_number }} |
+            {{ build_info.git_commit }} |
+            {{ build_info.git_branch }}
+        </div>
+
+    </div>
 </body>
 
 </html>

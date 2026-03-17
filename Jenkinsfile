@@ -55,7 +55,7 @@ pipeline {
                 script {    // ← Scripted Pipeline block
                     try {
                         sh '''
-pip install -r requirements.txt
+pip install -r ~app/requirements.txt
 
 echo "Running tests..."
 pytest app/tests/ -v > logs.txt 2>&1 || true

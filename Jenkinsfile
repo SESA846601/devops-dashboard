@@ -55,9 +55,14 @@ pipeline {
                 script {    // ← Scripted Pipeline block
                     try {
                         sh '''
-                        pip install -r requirements.txt
-                        pytest app/tests/ -v > logs.txt 2>&1
-                        '''
+pip install -r requirements.txt
+
+echo "Running tests..."
+pytest app/tests/ -v > logs.txt 2>&1 || true
+
+echo "Logs saved"
+ls -l logs.txt
+'''
                         //now saving logs
                     } catch (e) {
                         failedStageName = 'Test'

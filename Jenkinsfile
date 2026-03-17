@@ -48,7 +48,7 @@ pipeline {
 
         stage('Stop Old Container') {
             steps {
-                sh 'docker sop devops-dashboard || true'
+                sh 'docker stop devops-dashboard || true'
                 sh 'docker rm   devops-dashboard || true'
             }
         }

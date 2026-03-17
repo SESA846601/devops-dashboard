@@ -55,8 +55,8 @@ pipeline {
                 script {    // ← Scripted Pipeline block
                     try {
                         sh '''
-                            pip install flask pytest prometheus-flask-exporter --quiet
-                            pytest app/tests/ -v > logs.txt 2>&1
+                        pip install -r requirements.txt
+                        pytest app/tests/ -v > logs.txt 2>&1
                         '''
                         //now saving logs
                     } catch (e) {

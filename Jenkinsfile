@@ -59,6 +59,7 @@ pipeline {
             agent {
                 docker {
                     image 'python:3.9-slim'   // ← Agent using Container
+                    args '-u root'
                     reuseNode true            // reuse linux-vm workspace
                 }
             }
